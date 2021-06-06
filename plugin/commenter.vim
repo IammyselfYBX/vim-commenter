@@ -2,13 +2,16 @@
 " 本文件 commenter.vim 存放基本核心功能
 
 " 注释python 代码的当前行
-"let s:comment_string = ''
+let s:comment_string = '# '
 function! g:commenter#Comment()
-  let l:i = indent('.') " 缩进的空格
   "在当前行 . 的行首插入一个 #
-  let l:line = getline('.')
-  "call setline('.' , '# ' . l:line[1:i:])
-  call setline('.', l:line[:l:i - 1] . '# ' . l:line[l:i:])
+  let l:i = indent('.') " 缩进的空格
+  let l:line = getline('.') " 获得改行的内容
+  call setline('.', l:line[:l:i - 1] . s:comment_string . l:line[l:i:])
+  " 希望光标回到当前位置
+  let l:cur_row = getcurpos()[1]
+  let l:cur_col = getcurpos()[2]
+  call cursor(l:cur_row, l:cur_col + len(s:comment_string))
 endfunction
 
 nnoremap gc :call g:commenter#Comment()<cr>
